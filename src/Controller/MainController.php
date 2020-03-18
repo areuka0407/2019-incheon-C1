@@ -5,7 +5,11 @@ use App\DB;
 
 class MainController {
     function indexPage(){
-        view("index");
+        $viewData['events'] = DB::fetchAll("SELECT R.*, P.id placement_id, P.name placement_name 
+                                            FROM reserve_placement R, placement P 
+                                            WHERE P.id = R.placement AND timestamp(since) > NOW() 
+                                            ORDER BY since ASC LIMIT 0, 3");
+        view("index", $viewData);
     }
 
     function ajaxByList($table){

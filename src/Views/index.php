@@ -58,63 +58,27 @@
             <p class="mt-2 text-gray">이번 달의 진행 예정인 행사를 살펴보세요</p>
         </div>
         <div class="list mt-5 pt-5">
-            <div class="item item-33 item-sm-100 my-sm-1 box-shadow" data-placement="13" data-event="18">
+            <?php foreach($events as $event):?>
+            <div class="item item-33 item-sm-100 my-sm-1 box-shadow" data-placement="<?=$event->placement_id?>" data-event="<?=$event->id?>">
                 <div class="image w-100 hx-200">
-                    <img class="image-cover" src="./images/placement/01.jpg" alt="">
+                    <img class="image-cover" src="./images/placement/<?=$event->image?>" alt="">
                 </div>
                 <div class="info px-2 py-3">
                     <div class="d-flex justify-content-between align-items-center">
-                        <div class="bold fx-2 text-black">제3회 대학생 동아리 한마당</div>
+                        <div class="bold fx-2 text-black"><?=$event->name?></div>
                     </div>
-                    <div class="text-gray mt-1">과천세리움</div>
+                    <div class="text-gray mt-1"><?=$event->placement_name?></div>
                     <div class="text-gray mt-3 fx-n1">
                         <span class="mr-1 bold">대여일시</span>
-                        2020-03-16 ~ 2020-03-19
+                        <?=$event->since?> ~ <?=$event->until?>
                     </div>
                     <div class="text-gray mt-2 fx-n1">
                         <span class="mr-1 bold">예약일시</span>
-                        2020-02-01
+                        <?=$event->created_at?>
                     </div>
                 </div>
             </div>
-            <div class="item item-33 item-sm-100 my-sm-1 box-shadow" data-placement="11" data-event="19">
-                <div class="image w-100 hx-200">
-                    <img class="image-cover" src="./images/placement/04.jpg" alt="">
-                </div>
-                <div class="info px-2 py-3">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="bold fx-2 text-black">제3회 산업대제전</div>
-                    </div>
-                    <div class="text-gray mt-1">팔거천</div>
-                    <div class="text-gray mt-3 fx-n1">
-                        <span class="mr-1 bold">대여일시</span>
-                        2020-03-20 ~ 2020-03-22
-                    </div>
-                    <div class="text-gray mt-2 fx-n1">
-                        <span class="mr-1 bold">예약일시</span>
-                        2020-03-01
-                    </div>
-                </div>
-            </div>
-            <div class="item item-33 item-sm-100 my-sm-1 box-shadow" data-placement="6" data-event="20">
-                <div class="image w-100 hx-200">
-                    <img class="image-cover" src="./images/placement/04.jpg" alt="">
-                </div>
-                <div class="info px-2 py-3">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="bold fx-2 text-black">제1회 E스포츠 페스티벌</div>
-                    </div>
-                    <div class="text-gray mt-1">유니언타운</div>
-                    <div class="text-gray mt-3 fx-n1">
-                        <span class="mr-1 bold">대여일시</span>
-                        2020-03-30 ~ 2020-04-05
-                    </div>
-                    <div class="text-gray mt-2 fx-n1">
-                        <span class="mr-1 bold">예약일시</span>
-                        2020-03-02
-                    </div>
-                </div>
-            </div>
+            <?php endforeach;?>
         </div>
     </div>
 </div>

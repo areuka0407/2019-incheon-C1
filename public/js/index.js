@@ -91,8 +91,8 @@ window.addEventListener("load", async () => {
 
     // 툴팁
     let toolTip = $(`<div class="tool-tip"></div>`)[0];
-    let placements = await fetch("./data/placement.json").then(v => v.json());
-    let events = await fetch("./data/reservation.json").then(v => v.json());
+    let placements = await Ajax.post("/ajax-list/placement");
+    let events = await Ajax.post("/ajax-list/reserve_placement");
     document.querySelectorAll("#events .item").forEach(x => {
         let placeId = x.dataset.placement;
         let eventId = x.dataset.event;
@@ -128,7 +128,7 @@ window.addEventListener("load", async () => {
                                         </div>
                                     </div>
                                     <p class="mt-2 text-muted fx-n2 d-flex flex-wrap">
-                                        <span class="mr-2">${placement.rest.map(x => dayList[x]).join(", ")}요일 휴무</span>
+                                        <span class="mr-2">${JSON.parse(placement.rest).map(x => dayList[x]).join(", ")}요일 휴무</span>
                                     </p>
                                     <p class="text-gray fx-n1 mt-1">
                                         ${placement.description}
