@@ -4,8 +4,19 @@ namespace Controller;
 use App\DB;
 
 class UserController {
+    function signIn(){
+        emptyInvalidate();
+        extract($_POST);
+
+        $find = DB::fetch("SELECT * FROM users WHERE identity = ?", [$identity]);
+        if(!$find) back("아이디와 일치하는 회원정보를 찾을 수 없습니다.");
+        if($find->password !== hash("sha256", $password . SALT)) back("비밀번호가 일치하지 않습니다.");
+
+        session("user", $find);
+        redirect("/", "로그인 되었습니다.");
+    }
+
     function signUp(){
-        define("SALT", "UIOwuX5PNnm4a2orlR8ENANdTUJ3GdOu");
 
         emptyInvalidate();
         extract($_POST);
@@ -75,5 +86,10 @@ class UserController {
         $identity = isset($_POST['identity']) ? $_POST['identity'] : "";
         $isOverlap = DB::fetch("SELECT * FROM users WHERE identity = ?", [$identity]);
         json_response($identity === "" || $isOverlap);
+    }
+
+    function logout(){
+        unset($_SESSION['user']);
+        redirect("/", "로그아웃 되었습니다.");
     }
 }

@@ -199,11 +199,15 @@ window.addEventListener("load", async () => {
     
 
     // 다이얼 로그 생성 이벤트
-    $("#link-login").on("click", e => {
+    $(".link-login").on("click", e => {
+        e.preventDefault();
+        $("#nav-open")[0].checked = false;
         dialog.login.dialog("open");
     });
 
-    $("#link-join").on("click", e => {
+    $(".link-join").on("click", e => {
+        e.preventDefault();
+        $("#nav-open")[0].checked = false;
         dialog.join.dialog("open");
     });
 

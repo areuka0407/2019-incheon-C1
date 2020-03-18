@@ -1,3 +1,5 @@
+<script src="/js/index.js"></script>
+
 <!-- VISUAL -->
 <div id="visual">
     <div class="images">

@@ -15,6 +15,7 @@ class App {
     async init(){
         this.placements = await this.getPlacements();
         this.reservations = await this.getReservation();
+        console.log(this.reservations);
 
         this.placeId = null;
 
@@ -46,8 +47,41 @@ class App {
                 let overlap__startDate = app.startDate.trim() !== "" && this.id !== "start-date" ? date > new Date(app.startDate) : true;
                 let overlap__endDate = app.endDate.trim() !== "" && this.id !== "end-date" ? date < new Date(app.endDate) : true;
                 
-    
-                return [overlap__events && overlap__rest && overlap__startDate && overlap__endDate];
+                let no_include_disabled = true;
+                if(app.startDate.trim() !== "" && this.id == "end-date"){
+                    let startDate = new Date(app.startDate);
+                    let day = startDate.getDate() + 1; // 일
+                    let in_overlap__rest, in_overlap__events;
+                    let compareDate;
+                    do {
+                        compareDate = new Date(startDate.getFullYear(), startDate.getMonth(), day)
+                        in_overlap__rest = !placement.rest.includes(compareDate.getDay());
+                        in_overlap__events = !hasEvents.reduce((prev, current) => {
+                            let isOverlap = new Date(current.since) <= compareDate && compareDate <= new Date(current.until);
+                            return prev || isOverlap;
+                        }, false)
+                        day++;
+                    } while(in_overlap__rest && in_overlap__events && day - startDate.getDate() < 10);
+                    no_include_disabled = compareDate >= date;
+                }
+                else if(app.endDate.trim() !== "" && this.id == "start-date"){
+                    let startDate = new Date(app.endDate);
+                    let day = startDate.getDate() - 1; // 일
+                    let in_overlap__rest, in_overlap__events;
+                    let compareDate;
+                    do {
+                        compareDate = new Date(startDate.getFullYear(), startDate.getMonth(), day)
+                        in_overlap__rest = !placement.rest.includes(compareDate.getDay());
+                        in_overlap__events = !hasEvents.reduce((prev, current) => {
+                            let isOverlap = new Date(current.since) <= compareDate && compareDate <= new Date(current.until);
+                            return prev || isOverlap;
+                        }, false)
+                        day--;
+                    } while(in_overlap__rest && in_overlap__events && day - startDate.getDate() < 10);
+                    no_include_disabled = compareDate <= date;
+                }
+
+                return [overlap__events && overlap__rest && overlap__startDate && overlap__endDate && no_include_disabled];
             },
         };
 
@@ -75,13 +109,13 @@ class App {
         this.placements.forEach(place => {
             let item = $(`<div class="item item-33 item-sm-100 hover-opacity-reverse pointer" data-id="${place.id}">
                             <div class="w-100 hx-250">
-                                <img class="image-cover" src="./images/placement/${place.image[0]}" alt="행사장 이미지">
+                                <img class="image-cover" src="/images/placement/${place.image}" alt="행사장 이미지">
                             </div>
                             <div class="pl-2 pr-2 py-2">
                                 <div class="d-flex align-items-center justify-content-between">
                                     <span class="text-black bold fx-2">${place.name}</span>
                                     <div class="score d-flex align-items-center">
-                                        <img src="./images/scores/${place.score}.png" alt="${place.score}" height="20">
+                                        <img src="/images/scores/${place.score}.png" alt="${place.score}" height="20">
                                         <span class="fx-n2 text-red ml-1">${place.score}점</span>
                                     </div>
                                 </div>
@@ -113,7 +147,7 @@ class App {
         $("#reserve-placement .list").on("click", ".item", async e => {
             let target = e.currentTarget || e.target;
             this.placeId = parseInt(target.dataset.id);
-
+            $("#placement").val(this.placeId);
             
             let startDate = this.dialog.find("#start-date");
             let endDate = this.dialog.find("#end-date");
@@ -135,18 +169,18 @@ class App {
 
     getPlacements(){
         return new Promise(res => {
-            fetch("../data/placement.json")
-            .then(v => v.json())
-            .then(v => res(v));
+            Ajax.post("/ajax-list/placement")
+            .then(list => {
+                res(list.map(x => {
+                    x.rest = JSON.parse(x.rest);
+                    return x;
+                }))
+            });
         });
     }
     
     getReservation(){
-        return new Promise(res => {
-            fetch("../data/reservation.json")
-            .then(v => v.json())
-            .then(v => res(v));
-        });
+        return Ajax.post("/ajax-list/reserve_placement");
     }
 }
 

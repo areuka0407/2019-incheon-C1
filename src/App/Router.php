@@ -16,7 +16,7 @@ class Router {
             $page__action = $page[1];
 
             $regex = preg_replace("/\//", "\\/", $page__url);
-            $regex = preg_replace("/{([^\/]+)}/", "([^\/])", $regex);
+            $regex = preg_replace("/{([^\/]+)}/", "([^\/]+)", $regex);
             if(preg_match("/^".$regex."$/", $current_url, $matches)){
                 unset($matches[0]);
                 $split = explode("@", $page__action);
@@ -27,6 +27,6 @@ class Router {
                 exit;
             }
         }
-        echo "해당 페이지는 존재하지 않는 페이지입니다.";
+        http_response_code(404);
     }
 }

@@ -298,6 +298,7 @@ input[type="date"].form-control {
 
 #nav-open:checked + label {
     z-index: 1002;
+    filter: grayscale(100%) brightness(500%);
 }
 
 #nav-open:checked ~ #m-nav {

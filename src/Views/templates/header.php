@@ -18,7 +18,6 @@
     <script src="/js/jquery-3.4.1.js"></script>
     <script src="/jquery-ui-1.12.1/jquery-ui.min.js"></script>
     <script src="/js/common.js"></script>
-    <script src="/js/index.js"></script>
     <!-- /js -->
 </head>
 <body>
@@ -35,15 +34,19 @@
                 <div class="nav-item"><a href="/admin/venue">관리자 접속</a></div>
             </nav>
             <div class="other fx-n2 d-sm-none">
-                <a id="link-login" href="#" class="px-2">로그인</a>
-                <a id="link-join" href="#" class="px-2 ml-3">회원가입</a>
+                <?php if(!user()) :?>
+                    <a href="#" class="px-2 link-login">로그인</a>
+                    <a href="#" class="px-2 ml-3 link-join">회원가입</a>
+                <?php else :?>
+                    <a href="/logout" class="px-2 ml-3">로그아웃</a>
+                <?php endif;?>
             </div>
             
             <!-- MOBILE NAV -->
             <form class="d-none d-sm-block">
                 <input type="checkbox" id="nav-open" hidden>
                 <label for="nav-open" class="mr-3 icon d-none d-sm-block fx-3 position-relative">
-                    <img src="/images/icons/menu.png" alt="메뉴">
+                    <img src="/images/icons/Cmenu.png" alt="메뉴">
                 </label>
                 <div id="m-nav">
                     <div class="m-nav-inner">
@@ -54,8 +57,8 @@
                             <div class="nav-item hover-opacity"><a href="/admin/venue">관리자 접속</a></div>
                         </nav>
                         <div class="other fx-n2 mt-4 fx-2">
-                            <a href="#" class="px-2 hover-opacity">로그인</a>
-                            <a href="#" class="px-2 hover-opacity ml-3">회원가입</a>
+                            <a href="#" class="px-2 link-login hover-opacity">로그인</a>
+                            <a href="#" class="px-2 link-join hover-opacity ml-3">회원가입</a>
                         </div>
                     </div>
                 </div>

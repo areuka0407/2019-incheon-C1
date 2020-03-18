@@ -27,4 +27,8 @@ class DB {
     static function fetchAll($sql, $data = []){
         return self::execute($sql, $data)->fetchAll();
     }
+
+    static function find($table, $id){
+        return self::fetch("SELECT * FROM `${table}` WHERE id = ?", [$id]);
+    }
 }
