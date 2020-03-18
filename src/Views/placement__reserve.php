@@ -162,7 +162,7 @@
     <div class="fx-4 text-center text-red bold my-3">
         행사장 예약
     </div>
-    <form method="post" ecntype="multipart/form-data" autocomplete="off">
+    <form method="post" enctype="multipart/form-data" autocomplete="off">
         <input type="hidden" id="placement" name="place_id">
         <div class="py-2"> 
             <label class="mb-1 text-gray fx-n1" for="event-name">행사 이름</label>
@@ -172,7 +172,7 @@
             <label class="mb-1 text-gray fx-n1" for="event-image">행사 이미지</label>
             <div class="input-file">
                 <label for="event-image"></label>
-                <input type="file" id="event-image" class="form-control" name="image" placeholder="행사 명을 입력하세요.">
+                <input type="file" id="event-image" class="form-control" name="image">
             </div>                
         </div>
         <div class="py-2">
