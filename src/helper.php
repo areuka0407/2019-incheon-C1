@@ -23,13 +23,15 @@ function redirect($url, $message = ""){
     echo "location.href = '$url';";
     if($message) echo "alert('$message');";
     echo "</script>";
+    exit;
 }
 
 function back($message = ""){
     echo "<script>";
-    echo "history.back()";
+    echo "history.back();";
     if($message) echo "alert('$message');";
     echo "</script>";
+    exit;
 }
 
 function view($pageName, $data = []){
@@ -57,5 +59,17 @@ function session($key, $value = null){
     }
     else {
         $_SESSION[$key] = $value;
+    }
+}
+
+function json_response($data){ 
+    header("Content-Type: application/json");
+    echo json_encode($data);
+    exit;
+}
+
+function emptyInvalidate(){
+    foreach($_POST as $item){
+        if(trim($item) === "") back("모든 내용을 입력해 주세요.");
     }
 }

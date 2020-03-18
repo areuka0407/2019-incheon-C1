@@ -1,5 +1,5 @@
 <div id="join-dialog">
-    <form class="px-2 py-2" action="#" method="post" autocomplete="false">
+    <form class="px-2 py-2" action="/sign-up" method="post" autocomplete="false">
         <div class="fx-6 mb-2 text-center text-red bolder" lang="en">
             SIGN UP
         </div>
@@ -30,6 +30,7 @@
                 <button id="join__captcha-reload" class="button black fx-n3" type="none" form="none">새로고침</button>
             </div>
             <img id="join__captcha-image" class="w-100 my-2" src="/sign-up/captcha" alt="자동가입방지">
+            <p class="text-red fx-n2" hidden>자동가입방지 입력문자가 일치하지 않습니다.</p>
             <input type="text" id="join__captcha" class="form-control" name="captcha" placeholder="상단의 문자를 입력하세요" autocomplete="off">
         </div>
         <div class="py-2">

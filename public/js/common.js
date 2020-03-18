@@ -55,7 +55,7 @@ class Ajax {
             form.append(key, data[key]);
         }
         return new Promise(res => {
-            fetch(new Request(url, form))
+            fetch(new Request(url, {method: "post", body: form}))
             .then(v => v.json())
             .then(v => res(v));
         });
@@ -88,17 +88,47 @@ window.addEventListener("load", async () => {
                         return $contents;
                     }),
     }
+
+
+    // 실시간으로 중복 아이디 검사
+    let idChecking = () => new Promise(res => {
+        Ajax.post("/sign-up/check-overlap", {identity: idInput.val()})
+        .then(result => {
+            if(result){
+                idInput.prev()
+                .text("중복된 아이디 입니다.")
+                .show();
+                res(false);
+            }
+            else {
+                idInput.prev().hide();
+                res(true);
+            }
+        }); 
+    });
+    let idInput = dialog.join.find("#join__userid");
+    let idTimer = null;
+    idInput.on("input", e => {
+        if(idTimer) clearTimeout(idTimer);
+        idTimer = setTimeout(idChecking, 500);
+    });
+
+
     //  회원가입 다이얼로그 SUBMIT 이벤트
-    dialog.join.find("form").on("submit", function(e){
+    dialog.join.find("form").on("submit", async function(e){
         e.preventDefault();
+
         let error = false;
 
         let elem__id = $(this).find("#join__userid");
         if(elem__id.val().trim() !== "") elem__id.prev().hide();
         else {
-            elem__id.prev().show();
+            elem__id.prev().text("아이디를 입력하세요.").show();
             error = true;
         }
+
+        let check__id = await idChecking();
+        if(check__id == false) error = true;
     
         let elem__pw = $(this).find("#join__password");
         let regex__pw = /^(?=.*[a-zA-Z].*)(?=.*[0-9].*)(?=.*[!@#$%^&*\(\)].*)[a-zA-Z0-9!@#$%^&*\(\)]{6,20}$/;
@@ -124,10 +154,19 @@ window.addEventListener("load", async () => {
             error = true;
         }
 
+        let elem__captcha = $(this).find("#join__captcha");
+        let check__captcha = await Ajax.post("/sign-up/check-captcha", {input: elem__captcha.val()});
+        if(check__captcha) elem__captcha.prev().hide();
+        else {
+            elem__captcha.prev().show();
+            error = true;
+        }
+
         if(error == false)
             this.submit();
     });
 
+    
     // 회원가입 전화번호 이벤트
     dialog.join.find("#join__phone").on("input", function(e){
         let preview = dialog.join.find("#join__preview-phone");
