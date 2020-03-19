@@ -20,9 +20,23 @@ class PlacementController {
         if(!preg_match("/^image\/(jpeg|png|gif)$/", $image['type'])) back("이미지 파일이 아닙니다.");
 
 
-        $startDay = date("w", $start_date);
-        $endDay = date("w", $end_date);
-        if($startDay)
+        if($start_date > $end_date) back("시작일은 종료일보다 미래일 수 없습니다.");
+
+        $rest = json_decode($placement->rest);
+        $startDay = (int)date("w", strtotime($start_date));
+        $endDay = (int)date("w", strtotime($end_date));
+        if($startDay <= $endDay) {
+            foreach($rest as $restDay){
+                if($startDay <= $restDay && $restDay <= $endDay) back("행사장 휴무일에는 예약을 하실 수 없습니다.");
+            }
+        }
+
+        $isReserved = DB::fetch("SELECT * FROM reserve_placement 
+                                WHERE placement = ?
+                                AND timestamp(since) <= timestamp(?)
+                                AND timestamp(?) <= timestamp(until)", [$place_id, $end_date, $start_date]);
+        // dd($isReserved, $start_date, $end_date);
+        if($isReserved) back("해당일은 이미 예약이 되어있습니다.");
         
         
         DB::getConnection()->beginTransaction();

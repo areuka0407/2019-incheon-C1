@@ -33,18 +33,8 @@ class App {
             beforeShowDay: function(date){
                 if(app.placeId === null) return [false];
 
-                let placement = app.placements.find(place => place.id == app.placeId);
-                let hasEvents = app.reservations.filter(evt => evt.placement == app.placeId);
+                let overlap__restAndEvents = !app.overlapCheck(app.placeId, date);
 
-                let overlap__rest = !placement.rest.includes( date.getDay() );
-
-
-                let overlap__events = !hasEvents.reduce((prev, current) => {
-                    let isOverlap = new Date(current.since).getTime() <= date && date <= new Date(current.until).getTime();
-                    return prev || isOverlap;
-                }, false)
-
-                console.log(app.startDate, app.endDate);                
                 let overlap__startDate = app.startDate.trim() !== "" && this.id !== "start-date" ? date >= new Date(new Date(app.startDate).parseString()).getTime() : true;
                 let overlap__endDate = app.endDate.trim() !== "" && this.id !== "end-date" ? date <= new Date(new Date(app.endDate).parseString()).getTime() : true;
                 
@@ -52,37 +42,27 @@ class App {
                 if(app.startDate.trim() !== "" && this.id == "end-date"){
                     let startDate = new Date(app.startDate);
                     let day = startDate.getDate() + 1; // 일
-                    let in_overlap__rest, in_overlap__events;
-                    let compareDate;
+                    let compareDate, overlap;
                     do {
                         compareDate = new Date(startDate.getFullYear(), startDate.getMonth(), day)
-                        in_overlap__rest = !placement.rest.includes(compareDate.getDay());
-                        in_overlap__events = !hasEvents.reduce((prev, current) => {
-                            let isOverlap = new Date(current.since) <= compareDate && compareDate <= new Date(current.until);
-                            return prev || isOverlap;
-                        }, false)
+                        overlap = !app.overlapCheck(app.placeId, compareDate);
                         day++;
-                    } while(in_overlap__rest && in_overlap__events && day - startDate.getDate() < 10);
+                    } while(overlap);
                     no_include_disabled = compareDate >= date;
                 }
                 else if(app.endDate.trim() !== "" && this.id == "start-date"){
                     let startDate = new Date(app.endDate);
                     let day = startDate.getDate() - 1; // 일
-                    let in_overlap__rest, in_overlap__events;
-                    let compareDate;
+                    let compareDate, overlap;
                     do {
-                        compareDate = new Date(startDate.getFullYear(), startDate.getMonth(), day)
-                        in_overlap__rest = !placement.rest.includes(compareDate.getDay());
-                        in_overlap__events = !hasEvents.reduce((prev, current) => {
-                            let isOverlap = new Date(current.since) <= compareDate && compareDate <= new Date(current.until);
-                            return prev || isOverlap;
-                        }, false)
+                        compareDate = new Date(startDate.getFullYear(), startDate.getMonth(), day)  
+                        overlap = !app.overlapCheck(app.placeId, compareDate);
                         day--;
-                    } while(in_overlap__rest && in_overlap__events && day - startDate.getDate() < 10);
+                    } while(overlap);
                     no_include_disabled = compareDate <= date;
                 }
 
-                return [overlap__events && overlap__rest && overlap__startDate && overlap__endDate && no_include_disabled];
+                return [overlap__restAndEvents && overlap__startDate && overlap__endDate && no_include_disabled];
             },
         };
 
@@ -164,6 +144,19 @@ class App {
         
             this.dialog.dialog("open");
         });
+    }
+
+
+    overlapCheck(place_id, date){
+        let placement = this.placements.find(place => place.id == place_id);
+        let hasEvents = this.reservations.filter(evt => evt.placement == place_id);
+
+        let overlap__rest = placement.rest.includes( date.getDay() );
+        let overlap__events = hasEvents.reduce((prev, current) => {
+            let isOverlap = new Date(new Date(current.since).parseString()).getTime() <= date && date <= new Date(new Date(current.until).parseString()).getTime();
+            return prev || isOverlap;
+        }, false)
+        return overlap__rest || overlap__events;
     }
 
     // ajax
