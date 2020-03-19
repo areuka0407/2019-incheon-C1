@@ -23,10 +23,13 @@ Router::post("/sign-up/check-captcha", "UserController@checkCaptcha");
 Router::post("/sign-up/check-overlap", "UserController@checkOverlapId");
 
 /**
- * Reservation Placement
+ * Reservation
  */
 
-Router::get("/reservation/placement", "PlacementController@reservePage");
-Router::post("/reservation/placement", "PlacementController@addReservation");
+Router::get("/reservation/placement", "ReservationController@placementPage");
+Router::post("/reservation/placement", "ReservationController@addPlaceReservation");
+
+Router::get("/reservation/transportation", "ReservationController@transportPage");
+
 
 Router::connect();

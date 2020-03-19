@@ -3,12 +3,16 @@ namespace Controller;
 
 use App\DB;
 
-class PlacementController {
-    function reservePage(){
-        view("placement__reserve");
+class ReservationController {
+    /**
+     * Placement
+     */
+
+    function placementPage(){
+        view("reserve__placement");
     }
 
-    function addReservation(){
+    function addPlaceReservation(){
         emptyInvalidate();
         extract($_POST);
 
@@ -57,4 +61,12 @@ class PlacementController {
             DB::getConnection()->rollBack();
         }
     }
+
+    /**
+     * Transportation
+     */
+
+     function transportPage(){
+         view("reserve__transport");
+     }
 }

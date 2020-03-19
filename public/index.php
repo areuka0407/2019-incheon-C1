@@ -52,6 +52,35 @@ if($cnt == 0){
     }
 }
 
+$cnt = count(DB::fetchAll("SELECT * FROM transport"));
+if($cnt == 0){
+    $fileRead = file_get_contents(PUB.DS."data".DS."transportation.json");
+    $transport = json_decode($fileRead);
+    
+    foreach($transport as $item){
+        $data = [
+            $item->name, $item->description, $item->interval, json_encode($item->cycle),
+            json_encode($item->rest), $item->price, $item->limit
+        ];
+        DB::execute("INSERT INTO transport(name, description, interval_time, cycle, rest, price, limit_count) VALUES (?, ?, ?, ?, ?, ?, ?)", $data);
+    }    
+}
+
+$cnt = count(DB::fetchAll("SELECT * FROM reserve_transport"));
+if($cnt == 0){
+    $fileRead = file_get_contents(PUB.DS."data".DS."transportation_reservation.json");
+    $reserve = json_decode($fileRead);
+    
+    foreach($reserve as $item){
+        $data = [
+            $item->name, $item->transportation, $item->date, $item->time,
+            json_encode($item->member, JSON_UNESCAPED_UNICODE),
+            $item->price
+        ];
+        DB::execute("INSERT INTO reserve_transport(name, transportation, date, time, member, price) VALUES (?, ?, ?, ?, ?, ?)", $data);
+    }    
+}
+
 /* /JSON LOAD */
 
 

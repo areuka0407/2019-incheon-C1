@@ -6,9 +6,9 @@ class App {
     }
     
     async init(){
-        this.reserve__placements = await Ajax.getJSON("../data/reservation.json");
-        this.reserve__transports = await Ajax.getJSON("../data/transportation_reservation.json");
-        this.transports = await Ajax.getJSON("../data/transportation.json");
+        this.reserve__placements = await Ajax.post("/ajax-list/placement");
+        this.reserve__transports = await Ajax.post("/ajax-list/reserve_transport");
+        this.transports = await Ajax.post("/ajax-list/transport");
         this.tbody = document.querySelector("#reserve-transport .transport-table .tbody");
 
 
@@ -84,10 +84,11 @@ class App {
             this.dialog.find("#reserve-date").datepicker("setDate", "");
             this.dialog.find(".limit").text('0');
 
-            let [startTime, endTime] = transport.cycle;
+            let [startTime, endTime] = JSON.parse(transport.cycle);
+            console.log(startTime, endTime);
             timeSelect.html("");
             
-            for(let i = startTime.time2sec(); i < endTime.time2sec(); i += transport.interval){
+            for(let i = startTime.time2sec(); i < endTime.time2sec(); i += parseInt(transport.interval_time)){
                 let optionElem = $(`<option vlaue="${i}">${i.sec2time()}</option>`)[0];
                 timeSelect.append(optionElem);
             }
@@ -150,13 +151,14 @@ class App {
 
 
     getLeaveSeat({id, date, time}){
-        let {limit} = this.transports.find(t => t.id == id);
+        let {limit_count} = this.transports.find(t => t.id == id);
         let reserveList = this.reserve__transports.filter(r => r.transportation == id && r.date == date && r.time == time);
 
         return reserveList.reduce((init, reserve) => {
-            let buyCount = reserve.member.old + reserve.member.adult + reserve.member.kids;
+            let member = JSON.parse(reserve.member);
+            let buyCount = member.old + member.adult + member.kids;
             return init - buyCount;
-        }, limit);
+        }, limit_count);
     }
 
 
@@ -175,9 +177,9 @@ class App {
                             </div>
                         </div>
                         <div class="tdata price">￦ ${item.price.toLocaleString()}</div>
-                        <div class="tdata rest">${item.rest.map(x => dayList[x]).join(", ")}</div>
-                        <div class="tdata interval">${item.interval}분</div>
-                        <div class="tdata cycle">${item.cycle.join(" ~ ")}</div>
+                        <div class="tdata rest">${JSON.parse(item.rest).map(x => dayList[x]).join(", ")}</div>
+                        <div class="tdata interval">${item.interval_time}분</div>
+                        <div class="tdata cycle">${JSON.parse(item.cycle).join(" ~ ")}</div>
                         <div class="tdata status">
                             <div class="success">운행중</div>
                         </div>
