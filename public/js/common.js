@@ -2,6 +2,10 @@ Date.prototype.parseString = function(){
     let year = this.getFullYear();
     let month = this.getMonth() + 1;
     let date = this.getDate();
+
+    if(month < 10) month = "0" + month;
+    if(date < 10) date = "0" + date;
+    
     return `${year}-${month}-${date}`;
 }
 

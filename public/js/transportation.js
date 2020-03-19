@@ -6,12 +6,12 @@ class App {
     }
     
     async init(){
-        this.reserve__placements = await Ajax.post("/ajax-list/placement");
+        this.reserve__placements = await Ajax.post("/ajax-list/reserve_placement");
         this.reserve__transports = await Ajax.post("/ajax-list/reserve_transport");
         this.transports = await Ajax.post("/ajax-list/transport");
         this.tbody = document.querySelector("#reserve-transport .transport-table .tbody");
 
-
+        console.log(this.reserve__placements);
         // Dialog
         this.dialog = $("#dialog-reserve-transport");
         this.dialog.dialog({
@@ -34,7 +34,7 @@ class App {
             beforeShowDay: function(date){
                 let dateStr = date.parseString();
                 let overlap__events = !app.reserve__placements.some(x => {
-                    let isOverlap = new Date(x.since) <= new Date(dateStr) && new Date(dateStr) <= new Date(x.until);
+                    let isOverlap = new Date(x.since).getTime() <= new Date(dateStr).getTime() && new Date(dateStr).getTime() <= new Date(x.until).getTime();
                     return isOverlap;
                 });
                 return [overlap__events];
@@ -176,7 +176,7 @@ class App {
                                 <p class="mt-1 fx-n1">${item.description}</p>
                             </div>
                         </div>
-                        <div class="tdata price">￦ ${item.price.toLocaleString()}</div>
+                        <div class="tdata price">￦ ${parseInt(item.price).toLocaleString()}</div>
                         <div class="tdata rest">${JSON.parse(item.rest).map(x => dayList[x]).join(", ")}</div>
                         <div class="tdata interval">${item.interval_time}분</div>
                         <div class="tdata cycle">${JSON.parse(item.cycle).join(" ~ ")}</div>
