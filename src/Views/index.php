@@ -95,7 +95,7 @@
 <div id="dialog-event">
     <div class="d-flex">
         <div class="w-50">
-            <img class="image-cover" src="./images/placement/01.jpg" alt="전시장 이미지">
+            <img class="placement-image image-cover" src="./images/placement/01.jpg" alt="전시장 이미지">
         </div>
         <div class="w-50 pl-3">
             <div class="d-flex justify-content-between align-items-start">

@@ -14,10 +14,15 @@ class Router {
         foreach(self::$pageList as $page){
             $page__url = $page[0];
             $page__action = $page[1];
-
+            $page__permission = isset($page[2]) ? $page[2] : null;
+            
             $regex = preg_replace("/\//", "\\/", $page__url);
             $regex = preg_replace("/{([^\/]+)}/", "([^\/]+)", $regex);
             if(preg_match("/^".$regex."$/", $current_url, $matches)){
+                if($page__permission == "admin" && !admin()) return http_response_code(401);
+                else if($page__permission == "user" && !user()) return back("로그인 후 이용하실 수 있습니다.");
+                else if($page__permission == "guest" && user()) return back("로그인 후엔 이용하실 수 없습니다.");
+
                 unset($matches[0]);
                 $split = explode("@", $page__action);
                 $conName = "Controller\\{$split[0]}";

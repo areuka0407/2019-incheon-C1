@@ -101,9 +101,10 @@ window.addEventListener("load", async () => {
         // 다이얼 로그
         x.addEventListener("click", e => {
             let placement = placements.find(p => p.id == placeId);
+            eventDialog.find(".placement-image").attr("src", "/images/placement/" + event.image);
             eventDialog.find(".event-name").text(event.name);
             eventDialog.find(".placement-name").text(placement.name);
-            eventDialog.find(".score > img").attr("src", "./images/scores/" + placement.score + ".png");
+            eventDialog.find(".score > img").attr("src", "/images/scores/" + placement.score + ".png");
             eventDialog.find(".score > span").text(placement.score + "점");
             eventDialog.find(".since").text(event.since);
             eventDialog.find(".until").text(event.until);

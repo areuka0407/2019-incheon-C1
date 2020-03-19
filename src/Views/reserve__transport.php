@@ -89,6 +89,7 @@
         교통편 예약
     </div>
     <form action="#" method="post" class="d-flex flex-wrap text-gray">
+        <input type="hidden" id="transport_id" name="transport_id">
         <div class="left w-50 px-2">
             <div class="text-black mb-1">교통편 선택</div>
             <div class="py-1">
@@ -97,11 +98,11 @@
             </div>
             <div class="py-1">
                 <label class="fx-n1" for="reserve-date">이용 일자</label>
-                <input type="text" id="reserve-date" class="form-control datetime" readonly>
+                <input type="text" id="reserve-date" class="form-control datetime" name="date" readonly>
             </div>
             <div class="py-1">
                 <label class="fx-n1" for="reserve-time">이용 시간</label>
-                <select name="reserve-time" id="reserve-time" class="form-control datetime">
+                <select id="reserve-time" class="form-control datetime" name="time">
                     <option value>일자를 먼저 선택하세요</option>
                 </select>
             </div>
@@ -113,15 +114,15 @@
             </div>
             <div class="py-1">
                 <label class="fx-n1 mb-1 d-inline-block" for="cnt-child">어린이</label>
-                <input type="text" id="cnt-child" value="0">
+                <input type="text" id="cnt-child" value="0" name="cnt_child">
             </div>
             <div class="py-1">
                 <label class="fx-n1 mb-1 d-inline-block" for="cnt-adult">어른</label>
-                <input type="text" id="cnt-adult" value="0">
+                <input type="text" id="cnt-adult" value="0" name="cnt_adult">
             </div>
             <div class="py-1">
                 <label class="fx-n1 mb-1 d-inline-block" for="cnt-old">노약자</label>
-                <input type="text" id="cnt-old" value="0">
+                <input type="text" id="cnt-old" value="0" name="cnt_old">
             </div>
         </div>
         <div class="bottom w-100 mx-2 mt-3 mb-2 fx-n1 d-flex justify-content-between align-items-center">

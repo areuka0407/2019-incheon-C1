@@ -5,18 +5,17 @@ Date.prototype.parseString = function(){
 
     if(month < 10) month = "0" + month;
     if(date < 10) date = "0" + date;
-    
     return `${year}-${month}-${date}`;
 }
 
-String.prototype.time2sec = function(){
+String.prototype.time2min = function(){
     let matches = this.match(/(?<hour>[0-9]{2}):(?<minute>[0-9]{2})/);
     let hour = parseInt(matches.groups.hour);
     let minute = parseInt(matches.groups.minute);
     return hour * 60 + minute;
 }
 
-Number.prototype.sec2time = function(){
+Number.prototype.min2time = function(){
     let hour = Math.floor(this / 60);
     let minute = this % 60;
 

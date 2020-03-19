@@ -11,7 +11,6 @@ class App {
         this.transports = await Ajax.post("/ajax-list/transport");
         this.tbody = document.querySelector("#reserve-transport .transport-table .tbody");
 
-        console.log(this.reserve__placements);
         // Dialog
         this.dialog = $("#dialog-reserve-transport");
         this.dialog.dialog({
@@ -32,12 +31,18 @@ class App {
             showMonthAfterYear:true,
             dateFormat: "yy-mm-dd",
             beforeShowDay: function(date){
+                let transport = app.transports.find(x => x.id == app.selected);
+                let restDays = JSON.parse(transport.rest);
+                
+                let overlap__rest = restDays.includes(date.getDay());
+
                 let dateStr = date.parseString();
-                let overlap__events = !app.reserve__placements.some(x => {
+                let overlap__events = app.reserve__placements.some(x => {
                     let isOverlap = new Date(x.since).getTime() <= new Date(dateStr).getTime() && new Date(dateStr).getTime() <= new Date(x.until).getTime();
                     return isOverlap;
                 });
-                return [overlap__events];
+
+                return [overlap__events && !overlap__rest];
             },
             onSelect: function(){
                 let timeSelect = app.dialog.find("#reserve-time");
@@ -78,6 +83,7 @@ class App {
         // 테이블 리스트 클릭
         $("body").on("click", ".titem", e => {
             this.selected = e.currentTarget.dataset.id;    
+            $("#transport_id").val(this.selected);
 
             let transport = this.transports.find(x => x.id == this.selected);
             this.dialog.find("#reserve-transport").val(`${transport.name}`);
@@ -88,8 +94,8 @@ class App {
             console.log(startTime, endTime);
             timeSelect.html("");
             
-            for(let i = startTime.time2sec(); i < endTime.time2sec(); i += parseInt(transport.interval_time)){
-                let optionElem = $(`<option vlaue="${i}">${i.sec2time()}</option>`)[0];
+            for(let i = startTime.time2min(); i < endTime.time2min(); i += parseInt(transport.interval_time)){
+                let optionElem = $(`<option vlaue="${i}">${i.min2time()}</option>`)[0];
                 timeSelect.append(optionElem);
             }
 
@@ -134,7 +140,7 @@ class App {
                         + adult.spinner("value")
                         + old.spinner("value");
             if(seatCnt < buyCnt) return alert("인원이 너무 많습니다.");
-            alert("결제가 진행되었습니다.");
+            e.target.submit();
         });
 
         // 인원 조절 시 총 가격 표시

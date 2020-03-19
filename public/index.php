@@ -9,14 +9,21 @@ define("PUB", __DIR__);
 define("VIEW", SRC.DS."Views");
 define("VIEW_TEMPLATE", VIEW.DS."templates");
 
-
-
-
 require SRC.DS."autoload.php";
 require SRC.DS."helper.php";
 
-/* JSON LOAD */
 use App\DB;
+
+// APPEND ADMIN
+$result = DB::fetch("SELECT * FROM users WHERE grade = 1");
+if(!$result) {
+    $data = ["admin", hash("sha256", "1234".SALT), "관리자", "010-0000-0000", 1];
+    DB::execute("INSERT INTO users(identity, password, name, phone, grade) VALUES (?, ?, ?, ?, ?)", $data);
+    $admin_id = DB::getConnection()->lastInsertId();
+} else $admin_id = $result->id;
+
+
+/* JSON LOAD */
 $cnt = count(DB::fetchAll("SELECT * FROM placement"));
 if($cnt == 0){
     $fileRead = file_get_contents(PUB.DS."data".DS."placement.json");
@@ -45,10 +52,10 @@ if($cnt == 0){
             date("Y-m-d", strtotime($item->until)),
             $item->name,
             date("Y-m-d", strtotime($item->createdAt)), 
-            json_encode($item->user, JSON_UNESCAPED_UNICODE),
+            $admin_id,
             DB::find("placement", $item->placement)->image
         ];
-        DB::execute("INSERT INTO reserve_placement(placement, since, until, name, created_at, user, image) VALUES (?, ?, ?, ?, ?, ?, ?)", $data);
+        DB::execute("INSERT INTO reserve_placement(placement, since, until, name, created_at, user_id, image) VALUES (?, ?, ?, ?, ?, ?, ?)", $data);
     }
 }
 
@@ -73,11 +80,11 @@ if($cnt == 0){
     
     foreach($reserve as $item){
         $data = [
-            $item->name, $item->transportation, $item->date, $item->time,
+            $admin_id, $item->transportation, $item->date, $item->time,
             json_encode($item->member, JSON_UNESCAPED_UNICODE),
             $item->price
         ];
-        DB::execute("INSERT INTO reserve_transport(name, transportation, date, time, member, price) VALUES (?, ?, ?, ?, ?, ?)", $data);
+        DB::execute("INSERT INTO reserve_transport(user_id, transportation, date, time, member, price) VALUES (?, ?, ?, ?, ?, ?)", $data);
     }    
 }
 
