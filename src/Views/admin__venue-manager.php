@@ -9,28 +9,30 @@
             </tr>
         </thead>
         <tbody>
+            <?php foreach($placements as $placement): ?>
             <tr>
                 <td class="list__thumbnail-container">
-                    <!-- <img src="" alt="list__thumbnail" class="list__thumbnail"> -->
+                    <img src="/images/placement/<?=$placement->image?>" alt="list__thumbnail" class="list__thumbnail">
                 </td>
                 <td>
                     <div class="list__detail-row list__festival-name-row">
                         <div class="detail__title">행사장 이름</div>
-                        <div class="detail__content">행사</div>
+                        <div class="detail__content"><?=$placement->name?></div>
                     </div>
                     <div class="list__detail-row list__venue-name">
                         <div class="detail__title">행사장 소개</div>
-                        <div class="detail__content">Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum maxime asperiores debitis quod voluptas voluptatem dignissimos blanditiis</div>
+                        <div class="detail__content"><?=$placement->description?></div>
                     </div>
                     <div class="list__detail-row list__venue-name">
                         <div class="detail__title">임대료</div>
-                        <div class="detail__content">&#x20A9;10,000</div>
+                        <div class="detail__content">&#x20A9;<?=number_format($placement->price)?></div>
                     </div>
                 </td>
                 <td class="list__control">
-                    <button class="list__control-delete-button button">삭제</button>
+                    <button class="list__control-delete-button button" onclick="confirm('정말로 삭제하시겠습니까?') && location.assign('/admin/delete-placement/<?=$placement->id?>') ">삭제</button>
                 </td>
             </tr>
+            <?php endforeach;?>
         </tbody>
     </table>
 </div>

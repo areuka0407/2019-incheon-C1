@@ -112,7 +112,7 @@ class ReservationController {
             "kids" => $cnt_child
         ];
         $date = [user()->id, $transport_id, $date, $time, json_encode($member), $price_child + $price_adult + $price_old];
-        DB::execute("INSERT INTO reserve_transport(user_id, transportation, date, time, member, price) VALUES (?, ?, ?, ?, ?, ?)", $date);
+        DB::execute("INSERT INTO reserve_transport(user_id, transportation, date, time, member, price, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())", $date);
 
         redirect("/reservation/transportation", "예약이 완료되었습니다.");
      }

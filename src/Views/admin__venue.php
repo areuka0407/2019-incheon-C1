@@ -29,7 +29,7 @@
                         <div class="detail__content"><?=$res->since?> ~ <?=$res->until?></div>
                     </div>
                 </td>
-                <td class="list__user">예약자 이름 (예약자 아이디)</td>
+                <td class="list__user"><?=$res->user_name?> (<?=$res->user_id?>)</td>
                 <td class="list__created-at"><?=$res->created_at?></td>
             </tr>
             <?php endforeach;?>

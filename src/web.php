@@ -38,6 +38,8 @@ Router::get("/admin/venue", "AdminController@venuePage", "admin");
 Router::get("/admin/venue-manager", "AdminController@venueManagerPage", "admin");
 Router::get("/admin/transportation", "AdminController@transportPage", "admin");
 Router::get("/admin/transportation-manager", "AdminController@transportManagerPage", "admin");
+Router::get("/admin/delete-placement/{id}", "AdminController@removePlacement", "admin");
+Router::get("/admin/delete-transportation/{id}", "AdminController@removeTransport", "admin");
 
 
 Router::connect();

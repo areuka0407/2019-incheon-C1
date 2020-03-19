@@ -8,25 +8,27 @@
             </tr>
         </thead>
         <tbody>
+            <?php foreach($transports as $transport):?>
             <tr>
                 <td>
                     <div class="list__detail-row list__festival-name-row">
                         <div class="detail__title">교통편 이름</div>
-                        <div class="detail__content">고속버스</div>
+                        <div class="detail__content"><?=$transport->name?></div>
                     </div>
                     <div class="list__detail-row list__venue-name">
                         <div class="detail__title">교통편 소개</div>
-                        <div class="detail__content">Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum maxime asperiores debitis quod voluptas voluptatem dignissimos blanditiis</div>
+                        <div class="detail__content"><?=$transport->description?></div>
                     </div>
                     <div class="list__detail-row list__venue-name">
                         <div class="detail__title">운임</div>
-                        <div class="detail__content">&#x20A9;10,000</div>
+                        <div class="detail__content">&#x20A9;<?=$transport->price?></div>
                     </div>
                 </td>
                 <td class="list__control">
-                    <button class="list__control-delete-button button">삭제</button>
+                    <button class="list__control-delete-button button" onclick="confirm('정말로 삭제하시겠습니까?') && location.assign('/admin/delete-transportation/<?=$transport->id?>') ">삭제</button>
                 </td>
             </tr>
+            <?php endforeach;?>
         </tbody>
     </table>
 </div>

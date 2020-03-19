@@ -84,7 +84,7 @@ if($cnt == 0){
             json_encode($item->member, JSON_UNESCAPED_UNICODE),
             $item->price
         ];
-        DB::execute("INSERT INTO reserve_transport(user_id, transportation, date, time, member, price) VALUES (?, ?, ?, ?, ?, ?)", $data);
+        DB::execute("INSERT INTO reserve_transport(user_id, transportation, date, time, member, price, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())", $data);
     }    
 }
 
