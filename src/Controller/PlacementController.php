@@ -18,6 +18,11 @@ class PlacementController {
         $image = $_FILES['image'];
         if(!is_file($image['tmp_name'])) back("행사장 대표 이미지가 업로드 되지 않았습니다.");
         if(!preg_match("/^image\/(jpeg|png|gif)$/", $image['type'])) back("이미지 파일이 아닙니다.");
+
+
+        $startDay = date("w", $start_date);
+        $endDay = date("w", $end_date);
+        if($startDay)
         
         
         DB::getConnection()->beginTransaction();

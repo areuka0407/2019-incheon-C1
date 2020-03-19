@@ -35,17 +35,18 @@ class App {
 
                 let placement = app.placements.find(place => place.id == app.placeId);
                 let hasEvents = app.reservations.filter(evt => evt.placement == app.placeId);
-    
-                let overlap__events = !hasEvents.reduce((prev, current) => {
-                    let isOverlap = new Date(current.since) <= date && date <= new Date(current.until);
-                    return prev || isOverlap;
-                }, false)
-                
+
                 let overlap__rest = !placement.rest.includes( date.getDay() );
 
-                
-                let overlap__startDate = app.startDate.trim() !== "" && this.id !== "start-date" ? date > new Date(app.startDate) : true;
-                let overlap__endDate = app.endDate.trim() !== "" && this.id !== "end-date" ? date < new Date(app.endDate) : true;
+
+                let overlap__events = !hasEvents.reduce((prev, current) => {
+                    let isOverlap = new Date(current.since).getTime() <= date && date <= new Date(current.until).getTime();
+                    return prev || isOverlap;
+                }, false)
+
+                console.log(app.startDate, app.endDate);                
+                let overlap__startDate = app.startDate.trim() !== "" && this.id !== "start-date" ? date >= new Date(new Date(app.startDate).parseString()).getTime() : true;
+                let overlap__endDate = app.endDate.trim() !== "" && this.id !== "end-date" ? date <= new Date(new Date(app.endDate).parseString()).getTime() : true;
                 
                 let no_include_disabled = true;
                 if(app.startDate.trim() !== "" && this.id == "end-date"){

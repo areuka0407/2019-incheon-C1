@@ -96,11 +96,11 @@ window.addEventListener("load", async () => {
     document.querySelectorAll("#events .item").forEach(x => {
         let placeId = x.dataset.placement;
         let eventId = x.dataset.event;
-        let placement = placements.find(p => p.id == placeId);
         let event = events.find(evt => evt.id == eventId);
 
         // 다이얼 로그
         x.addEventListener("click", e => {
+            let placement = placements.find(p => p.id == placeId);
             eventDialog.find(".event-name").text(event.name);
             eventDialog.find(".placement-name").text(placement.name);
             eventDialog.find(".score > img").attr("src", "./images/scores/" + placement.score + ".png");
@@ -113,6 +113,7 @@ window.addEventListener("load", async () => {
 
         //툴팁
         x.addEventListener("mousemove", e => {
+            let placement = placements.find(p => p.id == placeId);
             let {clientX, clientY} = e;
             toolTip.style.left = clientX + "px";
             toolTip.style.top = clientY + "px";
@@ -136,6 +137,9 @@ window.addEventListener("load", async () => {
                                 </div>`;
             document.body.append(toolTip);
         });
+        x.addEventListener("mouseover", async e => {
+            placements = await Ajax.post("/ajax-list/placement");
+        }); 
         x.addEventListener("mouseleave", e => {
             toolTip.remove();
         });
